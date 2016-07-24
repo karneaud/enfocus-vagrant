@@ -1,0 +1,50 @@
+[
+    {"id":1, "answer": 2, "text":"What is your name",
+      "answers": [
+        {
+          "id": 1,
+          "text": "This an answer"
+        },
+        {
+          "id": 2,
+          "text": "This an another answer"
+        },
+        {
+          "id": 3,
+          "text": "This a <b>3rd answer</b>"
+        },
+      ]
+    },
+    {"id":2, "answer": 3, "text":"This is another question",
+      "answers": [
+        {
+          "id": 1,
+          "text": "This an answer for <i>second question</i>"
+        },
+        {
+          "id": 2,
+          "text": "This is the <em>SECOND</em>answer"
+        },
+        {
+          "id": 3,
+          "text": "This a <b>3rd answer</b>"
+        },
+      ]
+    },
+    {"id":3, "answer": 1, "text":"Question #3",
+      "answers": [
+        {
+          "id": 1,
+          "text": "This is <strong>THE</strong> answer!"
+        },
+        {
+          "id": 2,
+          "text": "This an another answer"
+        },
+        {
+          "id": 3,
+          "text": "This a <b>3rd answer</b> for the 3erd question"
+        },
+      ]
+    }
+  ]
