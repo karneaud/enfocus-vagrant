@@ -122,6 +122,10 @@ textarea {
   vertical-align: middle;
 }
 
+footer {
+  color:blue;
+}
+
 button,
 input {
   *overflow: visible;
