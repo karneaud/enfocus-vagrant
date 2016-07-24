@@ -1,4 +1,4 @@
-(ns app2.templates.layout
+(ns ^:figwheel-always app2.templates.layout
   (:require
         [hiccup.page :refer [html5]]
         [hiccup.def :refer [defelem]]

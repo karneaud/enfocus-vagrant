@@ -58,7 +58,7 @@
             (optimus/wrap get-assets optimizations/all serve-live-assets)
             ;;(wrap-cljsbuild "/js/" cljsbuild)
              wrap-content-type
-             (wrap-reload app {:dirs "src/app2/templates"})
+            (wrap-reload app {:dirs "src/app2/templates"})
              wrap-utf-8))
 
 (def export-dir "build")

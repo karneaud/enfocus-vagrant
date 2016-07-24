@@ -1,4 +1,4 @@
-(ns app2.templates.footer
+(ns ^:figwheel-always app2.templates.footer
   (:require
       [hiccup.page :refer [include-js]]
       [hiccup.element :refer [javascript-tag]]

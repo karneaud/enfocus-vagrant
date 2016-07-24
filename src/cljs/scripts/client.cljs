@@ -26,7 +26,7 @@
 
 (defn set-question
   []
-  (.log js/console "current-question" (nth questions questioned))
+  ;;(.log js/console "current-question" (nth questions (questioned inc)))
   (swap! current-question (nth questions questioned))
   (inc questioned))
 

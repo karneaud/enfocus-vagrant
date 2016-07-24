@@ -44,6 +44,7 @@
     :server-port 3000
 
   }
+  :resource-paths ["resources" "src/app2/templates"]
   :main app2.server/app
   :ring {:handler app2.server/app :auto-reload? true :auto-refresh? true :reload-paths ["resources/public"]}
   :profiles {
