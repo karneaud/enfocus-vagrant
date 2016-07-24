@@ -1,5 +1,5 @@
 [:div [:h1.w3-large "Landing page"]
-[:h4 "Welcome"]
+[:h4 "Welcome to SVG"]
 [:p "SVG!"]
 [:object {:id "game-board" :data "img/game-board.svg"}]
 [:div#questions-panel.panel

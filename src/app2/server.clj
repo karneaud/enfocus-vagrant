@@ -3,6 +3,7 @@
         [ring.middleware.file-info :only [wrap-file-info]]
         [ring.middleware.reload :refer [wrap-reload]]
         [ring.middleware.content-type :refer [wrap-content-type]]
+        [ring.middleware.refresh :refer [wrap-refresh]]
         [hiccup.page :refer [html5]])
   (:require
               [optimus.assets :as assets]
@@ -29,7 +30,7 @@
 
 (defn get-assets []
   (concat (assets/load-bundle "public" "styles.css" [#"css/.+\.css$"])
-    (assets/load-assets "public" [#"img/.*" "/questions.json" ])
+    (assets/load-assets "public" [#"img/.*" "/data/questions.json" "/robots.txt" ])
   ;;  (assets/load-assets "js" [#"js/out/.+\.json$"])
     (assets/load-bundle "public" "main.js" [#"js/.*"])
     ))
@@ -58,7 +59,8 @@
             (optimus/wrap get-assets optimizations/all serve-live-assets)
             ;;(wrap-cljsbuild "/js/" cljsbuild)
              wrap-content-type
-            (wrap-reload app {:dirs "src/app2/templates"})
+             (wrap-reload {:dirs "src/app2/templates"})
+             (wrap-refresh ["src/app2/templates" "resources/templates"])
              wrap-utf-8))
 
 (def export-dir "build")
@@ -75,3 +77,7 @@
     (optimus.export/save-assets assets export-dir)
     (export-pages {:optimus-assets assets})
   ))
+
+  ; (defn server
+  ;   [req]
+  ;   (run-server app {:join? false :port 3000}))
