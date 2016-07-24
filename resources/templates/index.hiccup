@@ -1,0 +1,11 @@
+[:div [:h1.w3-large "Landing page"]
+[:h4 "Welcome"]
+[:p "SVG!"]
+[:object {:id "game-board" :data "img/game-board.svg"}]
+[:div#questions-panel.panel
+  [:h3.question [:span.text]]
+  [:ol#answers.answers
+    [:li.answer {:value 1} [:p.text]]
+  ]
+]
+]

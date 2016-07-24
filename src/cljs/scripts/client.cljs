@@ -1,89 +1,86 @@
 (ns scripts.client
     (:require
-            ; [enfocus.core :as ef]
-            ;   [enfocus.effects :as effects]
-            ;   [enfocus.events :as events]
-              [clojure.browser.repl :as repl]
-              )
-    ;;(:use-macros [enfocus.macros :only [deftemplate defsnippet defaction]])
-    )
+      [ajax.core :refer [GET POST]]
+      [enfocus.core :as ef]
+      [enfocus.bind :refer [bind-view]]
+      [clojure.browser.repl :as repl])
+    (:use-macros [enfocus.macros :only [deftemplate defsnippet defaction]]))
 
-; (declare add-fruit)
-(.alert js/window "ok then now!")
-;
-; ;;************************************************
-; ;; Dev stuff
-; ;;************************************************
-; (def dev-mode true)
-;
-; (defn repl-connect []
-;  (when dev-mode
-;    (repl/connect "http://localhost:9000/repl")))
-;
-; ;;************************************************
-; ;; Retrieving data from dom
-; ;;************************************************
-;
-; (defn by-id [id]
-;   (.getElementById js/document id))
-;
-; ;; if from is sent one element it returns the value
-; (defn get-name []
-;  (ef/from (by-id "yourname") (ef/get-prop :value)))
-;
-; ;; if from is passed a set lookups it returns
-; ;; a map {:fruit "apple" :quanity "10" }
-; (defn get-fruit-vals []
-;  (ef/from js/document
-;    :fruit "#fruit" (ef/get-prop :value)
-;    :quanity "#quantity" (ef/get-prop :value)))
-;
-;
-; ;;************************************************
-; ;; snippets and templates
-; ;;************************************************
-;
-; ;; we can use enlive based selects
-; ;; along side string based selectors
-; (defsnippet home-snip :compiled "public/index.html" [:#stage] [])
-;
-; (deftemplate welcome-temp :compiled "public/templates/welcome.html" [name]
-;    "#name" (ef/content name)
-;    "#time" (ef/content (.toISOString (js/Date.))))
-;
-; ;note selectors can be vectors or bare strings
-; (defsnippet fruit-snip :compiled "public/templates/welcome.html"
-;   ["tbody > *:first-child"] [fruit quantity]
-;   ["tr > *:first-child"] (ef/content fruit)
-;   ["tr > *:last-child"]  (ef/content quantity))
-;
-;
-; ;;************************************************
-; ;; actions/navigation
-; ;;************************************************
-;
-; (defaction add-fruit [data]
-;   "tbody" (ef/append (fruit-snip (:fruit data) (:quanity data))))
-;
-; (defaction welcome []
-;   "#stage" (ef/substitute (welcome-temp (get-name)))
-;   "#home-btn" (ef/remove-class "active")
-;   "#fruit-btn" (events/listen :click
-;                               #(add-fruit (get-fruit-vals))))
-;
-; (defaction home []
-;   "#stage" (ef/substitute (home-snip))
-;   "#home-btn" (ef/add-class "active")
-;   "#welcome-btn" (events/listen :click welcome))
-;
-; (defaction init []
-;   "#home-btn" (events/listen :click home))
-; ;;************************************************
-; ;; onload
-; ;;************************************************
-;
-; (set! (.-onload js/window)
-;       #(do
-;          (repl-connect)
-;          (init)
-;          (home)))
+;;************************************************
+;; Dev stuff
+;;************************************************
+(def dev-mode true)
+
+(defn repl-connect []
+ (when dev-mode
+   (repl/connect "http://localhost:9000/repl")))
+
+;;************************************************
+;; Retrieving data from dom
+;;************************************************
+(def questions ())
+(def current-question (atom {}))
+(def coords ())
+(def dom-template ())
+(def questioned 0)
+
+(defn set-question
+  []
+  (.log js/console "current-question" (nth questions questioned))
+  (swap! current-question (nth questions questioned))
+  (inc questioned))
+
+(defn get-questions
+  []
+  (GET "/questions.json"
+    {:response-format :json
+      :handler (fn [response]
+        (def questions (shuffle response))
+        (set-question))
+    }
+  ))
+
+(defn answer-view
+  [val]
+
+  )
+
+(defn answers-view
+  [data]
+
+  )
+
+(defn set-question-text
+  [n data]
+    (.log js/console  "get-question" (:text data) n)
+    (ef/at n [".question .text"] (ef/content (:text data)) )
+  )
+
+(defn view
+  [data]
+
+  )
+
+(get-questions)
+
+(.addEventListener (. js/document (getElementById "game-board")) "load" (fn [e]
+    (.log js/console "loaded")
+    (let [svg (.getSVGDocument (. js/document (getElementById "game-board")))]
+         (let [circles (array-seq (.querySelectorAll svg "#numbers circle"))]
+           (def coords (for [circle circles]
+               {:x (.-baseVal.value (.-cx circle)) :y (.-baseVal.value (.-cy circle))})
+           ))
+     )
+  ))
+
+(defaction init []
+  (ef/at ["#questions-panel"]
+   (bind-view current-question set-question-text)))
+;;************************************************
+;; onload
+;;************************************************
+
+(set! (.-onload js/window)
+      #(do
+         (repl-connect)
+         (init)))

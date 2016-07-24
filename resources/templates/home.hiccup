@@ -1,0 +1,4 @@
+[:div
+  [:h1 {:class "w3-large"} "Home"]
+  [:p#para.w3-padding "this is a paragraph in the home page."]
+]
