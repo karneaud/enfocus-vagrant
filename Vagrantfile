@@ -43,7 +43,7 @@ Vagrant.configure(2) do |config|
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
   config.vm.synced_folder ".", "/home/vagrant/app", type: "rsync",
-  rsync__exclude: [".git/", ".gitignore","Vagrantfile","*.md"]
+  rsync__exclude: [".git/", ".gitignore","Vagrantfile","*.md"], rsync__args: ["--update", "--archive", "--delete", "-z", "--copy-links", "--exclude", "/resources/public/js"]
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
