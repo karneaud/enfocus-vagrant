@@ -1,6 +1,9 @@
-(require '[cljs.repl :as repl])
-(require '[cljs.repl.rhino :as rhino])
-(require '[cljs.build.api :as cljsc])
+(require
+  '[cljs.repl :as repl]
+  '[cljs.repl.rhino :as rhino])
 
-(def env (rhino/repl-env))
-(repl/repl env)
+(repl/repl* (rhino/repl-env)
+  {:output-dir "out"
+   :optimizations :none
+   :cache-analysis true
+   :source-map true})
