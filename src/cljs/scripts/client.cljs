@@ -26,13 +26,13 @@
 
 (defn set-question
   []
-  ;;(.log js/console "current-question" (nth questions (questioned inc)))
-  (swap! current-question (nth questions questioned))
+  (.log js/console "current-question: " (nth questions (inc questioned)))
+  (reset! current-question (nth questions questioned))
   (inc questioned))
 
 (defn get-questions
   []
-  (GET "/questions.json"
+  (GET "/data/questions.json"
     {:response-format :json
       :handler (fn [response]
         (def questions (shuffle response))
@@ -52,7 +52,7 @@
 
 (defn set-question-text
   [n data]
-    (.log js/console  "get-question" (:text data) n)
+    (.log js/console  "data" (str (:text data)) n)
     (ef/at n [".question .text"] (ef/content (:text data)) )
   )
 
