@@ -2,6 +2,7 @@
     (:require
       [ajax.core :refer [GET POST]]
       [enfocus.core :as ef]
+      [enfocus.events :as ev]
       [enfocus.bind :refer [bind-view]]
       [clojure.browser.repl :as repl])
     (:require-macros [enfocus.macros :as em])
@@ -19,67 +20,76 @@
 ;;************************************************
 ;; Retrieving data from dom
 ;;************************************************
-(def questions ())
-(def current-question (atom {}))
-(def coords ())
+(def state (atom {:questions ()
+                  :current-question {}
+                  :coords ()
+                  :questioned 0}))
+
 (def dom-template ())
-(def questioned 0)
+
 
 (defn set-question
   []
-  (reset! current-question (nth questions questioned))
-  (inc questioned))
+  (swap! state (fn [{:keys [questions questioned] :as state}]
+                 (-> state
+                     (assoc :current-question (nth questions questioned))
+                     (update :questioned inc)))))
 
 (defn get-questions
   []
   (GET "/data/questions.json"
     {:response-format :json :keywords? true
-      :handler (fn [response]
-        (def questions (shuffle response))
-        (set-question))
-    }
-  ))
+     :handler (fn [response]
+                (swap! state assoc :questions (shuffle response))
+                (set-question))}))
 
-(defn set-question-answers
-  [n data]
+;;This request takes way too long.  Not sure why but this should be
+;;fast and it is not.  2-3 seconds for this request on a fast machine.
+;;if you were using raw html we could used compiled and we would
+;;not need a request
+;;https://ckirkendall.github.io/enfocus-site/#doc-template
+(em/defsnippet question-list "/" ["#answers > .answer:first-child"]
+  [data]
+  ".answer" (em/clone-for [q data]
+              ".text" (ef/html-content (:text q))))
 
-    ;;(.log js/console "n" (values(ef/at n ["#answers"])) "data " (str data))
-    (ef/at n ["#answers > .answer:first-child"]
-      (em/clone-for [q data]
-        ".text" (ef/content (:text q))
-        ;; (ef/set-attr :value (:id q))
-      ))
-  )
 
-(defn set-question-text
-  [n text]
-    (ef/at n [".question .text"] (ef/content text)))
+(defn set-question-answers [n data]
+  (js/console.log "STATE:" (pr-str@state))
+  (ef/at n "#answers" (ef/content (question-list data))))
 
-(defn view
-  [n data]
-     (set-question-text n (:text data))
-    (set-question-answers n (:answers data)))
+(defn set-question-text [n text]
+  (ef/at n [".question .text"] (ef/content text)))
 
-(get-questions)
 
-(.addEventListener (. js/document (getElementById "game-board")) "load" (fn [e]
-    (.log js/console "loaded")
-    (let [svg (.getSVGDocument (. js/document (getElementById "game-board")))]
-         (let [circles (array-seq (.querySelectorAll svg "#numbers circle"))]
-           (def coords (for [circle circles]
-               {:x (.-baseVal.value (.-cx circle)) :y (.-baseVal.value (.-cy circle))})
-           ))
-     )
-  ))
+(defn view [n data]
+  (set-question-text n (:text data))
+  (set-question-answers n (:answers data)))
 
-(defaction init []
+;; no need to listen on load because this isn't called until the
+;; page loads
+(defn load-coords []
+  (.log js/console "loaded")
+  (let [svg (.getSVGDocument (. js/document (getElementById "game-board")))]
+    (swap! state merge
+           (ef/from svg
+             :coords "#numbers circle"
+             (fn [circle]
+               {:x (.-baseVal.value (.-cx circle))
+                :y (.-baseVal.value (.-cy circle))})))))
+
+(defn init []
+  (get-questions)
+  (load-coords)
   (ef/at ["#questions-panel"]
-   (bind-view current-question view)))
+         (bind-view state view :current-question)))
+
 ;;************************************************
 ;; onload
 ;;************************************************
 
 (set! (.-onload js/window)
       #(do
-         (repl-connect)
-         (init)))
+         (js/console.log "LOADING TEMPLATES")
+         (em/wait-for-load (js/console.log "DONE LOADING TEMPLATES")
+                           (init))))
