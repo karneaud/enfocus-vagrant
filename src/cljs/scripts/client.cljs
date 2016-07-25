@@ -4,7 +4,8 @@
       [enfocus.core :as ef]
       [enfocus.bind :refer [bind-view]]
       [clojure.browser.repl :as repl])
-    (:use-macros [enfocus.macros :only [deftemplate defsnippet defaction]]))
+    (:require-macros [enfocus.macros :as em])
+    (:use-macros [enfocus.macros :only [defaction]]))
 
 ;;************************************************
 ;; Dev stuff
@@ -26,40 +27,38 @@
 
 (defn set-question
   []
-  (.log js/console "current-question: " (nth questions (inc questioned)))
   (reset! current-question (nth questions questioned))
   (inc questioned))
 
 (defn get-questions
   []
   (GET "/data/questions.json"
-    {:response-format :json
+    {:response-format :json :keywords? true
       :handler (fn [response]
         (def questions (shuffle response))
         (set-question))
     }
   ))
 
-(defn answer-view
-  [val]
+(defn set-question-answers
+  [n data]
 
-  )
-
-(defn answers-view
-  [data]
-
+    ;;(.log js/console "n" (values(ef/at n ["#answers"])) "data " (str data))
+    (ef/at n ["#answers > .answer:first-child"]
+      (em/clone-for [q data]
+        ".text" (ef/content (:text q))
+        ;; (ef/set-attr :value (:id q))
+      ))
   )
 
 (defn set-question-text
-  [n data]
-    (.log js/console  "data" (str (:text data)) n)
-    (ef/at n [".question .text"] (ef/content (:text data)) )
-  )
+  [n text]
+    (ef/at n [".question .text"] (ef/content text)))
 
 (defn view
-  [data]
-
-  )
+  [n data]
+     (set-question-text n (:text data))
+    (set-question-answers n (:answers data)))
 
 (get-questions)
 
@@ -75,7 +74,7 @@
 
 (defaction init []
   (ef/at ["#questions-panel"]
-   (bind-view current-question set-question-text)))
+   (bind-view current-question view)))
 ;;************************************************
 ;; onload
 ;;************************************************
