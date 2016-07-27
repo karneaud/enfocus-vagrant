@@ -61,8 +61,8 @@
              ;; wrap-file-info
              ;;(stasis/serve-pages get-pages)
              ;;(optimus/wrap get-assets optimizations/all serve-live-assets)
-             wrap-content-type
              wrap-reload
+             wrap-content-type
              wrap-refresh
              wrap-utf-8))
 
