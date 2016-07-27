@@ -37,13 +37,6 @@
   :aliases {
     "start-dev" ["pdo" ["cljsbuild" "auto"] ["ring" "server-headless"]]
   }
-  :figwheel {
-    :css-dirs ["resources/public/css"]
-    :reload-clj-files {:clj true :cljc false}
-    :ring-handler app2.server/app
-    :repl false
-    :server-port 3000
-  }
   :source-paths ["src"]
   :resource-paths ["resources"]
   :main app2.server
@@ -59,13 +52,16 @@
                 :timeout 40000
               }
   :ring {
+    :init app2.hawk/init
     :handler app2.server/app
     :auto-reload? true :auto-refresh? true :reload-paths ["resources/public"]
     :refresh-paths ["src/app2/templates"]}
   :profiles {
     :dev {
-          :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
-          :source-paths ["cljs_src"]
+          :repl-options {
+            :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]
+          }
+          :source-paths ["src"]
             :ring {
               :nrepl {
                 :start? true
