@@ -23,34 +23,42 @@
 (def state (atom {:questions ()
                   :current-question {}
                   :coords ()
-                  :questioned 0}))
+                  }))
 
 (def dom-template ())
 (def debug true)
 
 (defn set-question
   []
-  (swap! state (fn [{:keys [questions questioned] :as state}]
+  (swap! state (fn [{:keys [questions] :as state}]
                  (-> state
-                     (assoc :current-question (nth questions questioned))
-                     (update :questioned inc)))))
+                     (assoc :current-question (nth (shuffle questions) 0))
+                     ))))
 
 (defn get-questions
   []
   (GET "/data/questions.json"
     {:response-format :json :keywords? true
      :handler (fn [response]
-                (swap! state assoc :questions (shuffle response))
+                (swap! state assoc :questions response)
                 (set-question))}))
+(defn wrong-answer
+  [choice]
+  (when (js/confirm (str choice " Was the wrong answer. Click to continue!")) (set-question))
+  )
 
+(defn correct-answer
+  [choice]
+  (swap! state assoc :questions (drop 1 (:questions @state)))
+  (when (js/confirm "Correct answer!. Click to continue!") (set-question)))
 
 (defn check-is-answer
   [event]
-  (js/console.log "ok"
-  ;;(:current-question @state)
-  )
-  ;; (let [answer (.-value (.-currentTarget.parentElement event))])
-  )
+  (let [choice (.-value (.-currentTarget.parentElement event)) question (:current-question @state)]
+    (if (= choice (:answer question))
+      (correct-answer choice)
+      (wrong-answer choice))
+  ))
 ;;This request takes way too long.  Not sure why but this should be
 ;;fast and it is not.  2-3 seconds for this request on a fast machine.
 ;;if you were using raw html we could used compiled and we would
@@ -60,11 +68,9 @@
   [data]
   ".answer" (em/clone-for [q data]
     ".text" (ef/do->
-                   (ef/html-content (:text q))
-                   )
+                   (ef/html-content (:text q)))
      ef/this-node (ev/listen-live :click ".text" check-is-answer)
-     ef/this-node (ef/set-attr :value (:id q)))
-     )
+     ef/this-node (ef/set-attr :value (:id q))))
 
 
 (defn set-question-answers [n data]
