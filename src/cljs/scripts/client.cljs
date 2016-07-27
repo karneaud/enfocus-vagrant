@@ -43,6 +43,11 @@
                 (swap! state assoc :questions (shuffle response))
                 (set-question))}))
 
+
+(defn check-is-answer
+  [event]
+  (js/console.log (.target.value event))
+  )
 ;;This request takes way too long.  Not sure why but this should be
 ;;fast and it is not.  2-3 seconds for this request on a fast machine.
 ;;if you were using raw html we could used compiled and we would
@@ -51,7 +56,9 @@
 (em/defsnippet question-list "/" ["#answers > .answer:first-child"]
   [data]
   ".answer" (em/clone-for [q data]
-              ".text" (ef/html-content (:text q))))
+              ".text" (ef/html-content (:text q))
+              (ef/set-attr :value (:id q))
+              (ev/listen-live :click "a" check-is-answer)))
 
 
 (defn set-question-answers [n data]
