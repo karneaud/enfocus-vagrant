@@ -6,5 +6,7 @@
   []
   (export-pages)
   (hawk/watch! [{:paths ["src/app2/templates" "resources/templates"]
+               :filter hawk/modified?
                :handler (fn [ctx e]
-                          (export-pages))}]))
+                          (export-pages)
+                          )}]))
