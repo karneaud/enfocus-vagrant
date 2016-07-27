@@ -26,7 +26,7 @@
                   :questioned 0}))
 
 (def dom-template ())
-
+(def debug true)
 
 (defn set-question
   []
@@ -56,9 +56,10 @@
 (em/defsnippet question-list "/" ["#answers > .answer:first-child"]
   [data]
   ".answer" (em/clone-for [q data]
-              ".text" (ef/html-content (:text q))
-              (ef/set-attr :value (:id q))
-              (ev/listen-live :click "a" check-is-answer)))
+            ".text" (ef/html-content (:text q))
+              (ev/listen-live :click ".text" check-is-answer)
+              ef/this-node (ef/set-attr :value (:id q))
+              ))
 
 
 (defn set-question-answers [n data]
@@ -99,4 +100,5 @@
       #(do
          (js/console.log "LOADING TEMPLATES")
          (em/wait-for-load (js/console.log "DONE LOADING TEMPLATES")
-                           (init))))
+                           (init))
+                           (repl-connect)))
