@@ -57,12 +57,8 @@
             (file-response (:uri request) {:root "resources/public"}))
 
 (def app (-> handler
-             ;;(wrap-resource "resources/public")
-             ;; wrap-file-info
-             ;;(stasis/serve-pages get-pages)
-             ;;(optimus/wrap get-assets optimizations/all serve-live-assets)
-             wrap-reload
              wrap-content-type
+             wrap-reload
              wrap-refresh
              wrap-utf-8))
 

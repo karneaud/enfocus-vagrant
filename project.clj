@@ -17,22 +17,12 @@
 
     {:id "dev"
     :incremental true
-    :source-paths ["src/cljs"],
-                        :figwheel {
-                          :websocket-host :js-client-host
-                          :on-jsload "scripts.dev/refresh"
-                          :autoload false
-                          :reload-dependents true
-                          :debug true
-                        }
+    :source-paths ["src/cljs"]
                         :compiler {
                           :main "scripts.client"
                           :output-to "resources/public/js/main.js"
                           :output-dir "resources/public/js/out"
                           :asset-path "js/out"
-                          ;;:pretty-print true
-                          ;;:optimizations :none
-
                           }}]}
   :aliases {
     "start-dev" ["pdo" ["cljsbuild" "auto"] ["ring" "server-headless"]]
@@ -55,7 +45,8 @@
     :init app2.hawk/init
     :handler app2.server/app
     :auto-reload? true :auto-refresh? true :reload-paths ["resources/public"]
-    :refresh-paths ["src/app2/templates"]}
+    :refresh-paths ["resrouces/public"]
+  }
   :profiles {
     :dev {
           :repl-options {

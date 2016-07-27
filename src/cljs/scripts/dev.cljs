@@ -4,7 +4,9 @@
   ))
 
 (defn refresh []
-  (.reload js/window.location true))
+  ;; (.reload js/window.location true)
+  )
+
 (fig/add-message-watch
  :html-watcher
  (fn [{:keys [msg-name files] :as msg}]
