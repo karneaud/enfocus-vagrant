@@ -46,7 +46,10 @@
 
 (defn check-is-answer
   [event]
-  (js/console.log (.target.value event))
+  (js/console.log "ok"
+  ;;(:current-question @state)
+  )
+  ;; (let [answer (.-value (.-currentTarget.parentElement event))])
   )
 ;;This request takes way too long.  Not sure why but this should be
 ;;fast and it is not.  2-3 seconds for this request on a fast machine.
@@ -56,14 +59,16 @@
 (em/defsnippet question-list "/" ["#answers > .answer:first-child"]
   [data]
   ".answer" (em/clone-for [q data]
-            ".text" (ef/html-content (:text q))
-              (ev/listen-live :click ".text" check-is-answer)
-              ef/this-node (ef/set-attr :value (:id q))
-              ))
+    ".text" (ef/do->
+                   (ef/html-content (:text q))
+                   )
+     ef/this-node (ev/listen-live :click ".text" check-is-answer)
+     ef/this-node (ef/set-attr :value (:id q)))
+     )
 
 
 (defn set-question-answers [n data]
-  (js/console.log "STATE:" (pr-str@state))
+  ;;(js/console.log "STATE:" (pr-str@state))
   (ef/at n "#answers" (ef/content (question-list data))))
 
 (defn set-question-text [n text]
@@ -77,7 +82,7 @@
 ;; no need to listen on load because this isn't called until the
 ;; page loads
 (defn load-coords []
-  (.log js/console "loaded")
+  ;;(.log js/console "loaded")
   (let [svg (.getSVGDocument (. js/document (getElementById "game-board")))]
     (swap! state merge
            (ef/from svg
@@ -98,7 +103,8 @@
 
 (set! (.-onload js/window)
       #(do
-         (js/console.log "LOADING TEMPLATES")
-         (em/wait-for-load (js/console.log "DONE LOADING TEMPLATES")
+         ;; (js/console.log "LOADING TEMPLATES")
+         (em/wait-for-load
+           ;;(js/console.log "DONE LOADING TEMPLATES")
                            (init))
                            (repl-connect)))
