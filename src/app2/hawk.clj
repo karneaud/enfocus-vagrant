@@ -9,4 +9,4 @@
                :filter hawk/modified?
                :handler (fn [ctx e]
                           (export-pages)
-                          )}]))
+                          ctx)}]))

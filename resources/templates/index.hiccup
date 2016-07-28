@@ -5,7 +5,7 @@
 [:div#questions-panel.panel
   [:h3.question [:span.text]]
   [:ol#answers.answers
-    [:li.answer {:value 1} [:a.text ]]
+    [:li.answer {:value 1} [:a.text :href "javascript:void(0)"]]
   ]
 ]
 ]

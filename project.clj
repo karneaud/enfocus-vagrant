@@ -69,6 +69,7 @@
               [org.clojure/tools.nrepl "0.2.11"]
               [com.cemerick/piggieback "0.2.1"]
               [hawk "0.2.10"]
+              [clj-livereload "0.2.0"]
             ]
             :plugins [
               [lein-pdo "0.1.1"]
