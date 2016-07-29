@@ -44,6 +44,7 @@
   :ring {
     :init app2.hawk/init
     :handler app2.server/app
+    :auto-refresh? true
   }
   :profiles {
     :dev {
@@ -62,8 +63,6 @@
               [org.clojure/tools.nrepl "0.2.11"]
               [com.cemerick/piggieback "0.2.1"]
               [hawk "0.2.10"]
-              [weasel "0.7.0"]
-              [aviary "0.1.22"]
             ]
             :plugins [
               [lein-pdo "0.1.1"]
