@@ -2,9 +2,7 @@
   (:use [ring.middleware.resource :only [wrap-resource]]
         [ring.middleware.file-info :only [wrap-file-info]]
         [ring.middleware.file :only [wrap-file]]
-        [ring.middleware.reload :refer [wrap-reload]]
         [ring.middleware.content-type :refer [wrap-content-type]]
-        [ring.middleware.refresh :refer [wrap-refresh]]
         [ring.util.response :refer [file-response]]
         [hiccup.page :refer [html5]])
   (:require
@@ -58,8 +56,6 @@
 
 (def app (-> handler
              wrap-content-type
-             wrap-reload
-             wrap-refresh
              wrap-utf-8))
 
 (def export-dir "build")

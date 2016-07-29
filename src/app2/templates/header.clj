@@ -1,4 +1,4 @@
-(ns ^:figwheel-always app2.templates.header
+(ns app2.templates.header
   (:require
       [hiccup.page :refer [include-css include-js]]
       [hiccup.element]

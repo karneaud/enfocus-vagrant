@@ -44,8 +44,6 @@
   :ring {
     :init app2.hawk/init
     :handler app2.server/app
-    :auto-reload? true :auto-refresh? true :reload-paths ["resources/public"]
-    :refresh-paths ["resrouces/public"]
   }
   :profiles {
     :dev {
@@ -61,19 +59,14 @@
               }
             }
             :dependencies [
-              [figwheel "0.5.4-7"]
-              [com.stuartsierra/component "0.3.1"]
-              [ring-refresh "0.1.1"]
-              [http-kit "2.0.0"]
-              [figwheel-sidecar "0.5.4-7"]
               [org.clojure/tools.nrepl "0.2.11"]
               [com.cemerick/piggieback "0.2.1"]
               [hawk "0.2.10"]
-              [clj-livereload "0.2.0"]
+              [weasel "0.7.0"]
+              [aviary "0.1.22"]
             ]
             :plugins [
               [lein-pdo "0.1.1"]
-              [lein-figwheel "0.5.4-7"]
             ]
           }
         }

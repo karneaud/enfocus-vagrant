@@ -1,4 +1,4 @@
-(ns ^:figwheel-always scripts.dev
+(ns scripts.dev
   (:require [figwheel.client :as fig]
             [scripts.client :as client]
   ))
